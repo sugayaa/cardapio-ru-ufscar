@@ -195,4 +195,6 @@ print()
 for dia in semana:
     dia.imprime()
 
+print("\tI like to eat avocados\tAVOCADOS")
+
 
