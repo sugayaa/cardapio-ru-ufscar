@@ -2,6 +2,7 @@ import os
 from html.parser import HTMLParser
 from dateutil.parser import parse
 
+TAB_SIZE = 35
 leiaCardapio = False
 dias = -1
 conjDias = []
@@ -44,6 +45,59 @@ class diaDaSemana():
         self.almoco.imprime()
         self.jantar.imprime()
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+def printDate(date):
+    return '{}/{}/{}'.format(date.day, date.month, date.year)
+
+def getDataEDia(index):
+    dataEDia = ""
+
+    dataEDia += printDate(getattr(semana[index], 'data'))
+    dataEDia += " - "
+    dataEDia += getattr(semana[index], 'diaDaSemana')
+    dataEDia += " "
+
+    return dataEDia
+
+def getMealLine(index):
+    refeicao = getattr(semana[index], 'almoco')
+    carne = getattr(refeicao, 'pratoPrincipalCarne')
+    mealLine = "* "
+    if len(carne) > TAB_SIZE - 4:
+        carne = carne[0:TAB_SIZE - 7]
+        carne += "..."
+        mealLine += carne
+    else:
+        mealLine += carne
+        mealLine += " " * (TAB_SIZE - len(carne) - 4)
+
+    mealLine += " *"
+    return mealLine
+
+
+def getMealLine(index, meal, attr):
+    refeicao = getattr(semana[index], meal)
+    food = getattr(refeicao, attr)
+    mealLine = "* "
+
+    if attr == "arroz":
+        mealLine += "Arroz "
+    elif attr == "feijao":
+        mealLine += "Feijão "
+    elif attr == "saladas":
+        mealLine += "Salada "
+
+    if len(food) > TAB_SIZE - 4:
+        food = food[0:TAB_SIZE - 5 - len(mealLine)] #3 from "..." + 2 from " *"
+        food += "..."
+        mealLine += food
+    else:
+        mealLine += food
+        mealLine += " " * (TAB_SIZE - 2 - len(mealLine)) #2 from " *"
+
+    mealLine += " *"
+    return mealLine
+
 
 semana = []
 for dia in range(7):
@@ -195,6 +249,62 @@ print()
 for dia in semana:
     dia.imprime()
 
-print("\tI like to eat avocados\tAVOCADOS")
+#first line
+print("\t\t\t\t\t\t\t\tCARDAPIO DA SEMANA")
+print("~~ ", getDataEDia(0), "~" * (TAB_SIZE - 3 - len(getDataEDia(0))), "\t", sep='',end='')
+print("~~ ", getDataEDia(1), "~" * (TAB_SIZE - 3 - len(getDataEDia(1))), "\t", sep='',end='')
+print("~~ ", getDataEDia(2), "~" * (TAB_SIZE - 3 - len(getDataEDia(2))), "\t", sep='',end='')
+print("~~ ", getDataEDia(3), "~" * (TAB_SIZE - 3 - len(getDataEDia(3))), "\n", sep='',end='')
+
+#second line
+refeicao = getattr(semana[0], 'almoco')
+print("* >>>", getattr(refeicao, 'periodo'), " "*(TAB_SIZE - 12),"*\t",sep='', end='')
+print("* >>>", getattr(refeicao, 'periodo'), " "*(TAB_SIZE - 12),"*\t",sep='', end='')
+print("* >>>", getattr(refeicao, 'periodo'), " "*(TAB_SIZE - 12),"*\t",sep='', end='')
+print("* >>>", getattr(refeicao, 'periodo'), " "*(TAB_SIZE - 12),"*\n",sep='', end='')
+
+#third line
+print(getMealLine(0,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
+print(getMealLine(1,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
+print(getMealLine(2,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
+print(getMealLine(3,'almoco','pratoPrincipalCarne'),"\n",sep='',end='')
+
+#semana[0].almoco.pratoPrincipalVegetariano = "a"*37
+#fourth line
+print(getMealLine(0,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
+print(getMealLine(1,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
+print(getMealLine(2,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
+print(getMealLine(3,'almoco','pratoPrincipalVegetariano'),"\n",sep='',end='')
+
+
+#fifth line
+print(getMealLine(0,'almoco','arroz'),"\t",sep='',end='')
+print(getMealLine(1,'almoco','arroz'),"\t",sep='',end='')
+print(getMealLine(2,'almoco','arroz'),"\t",sep='',end='')
+print(getMealLine(3,'almoco','arroz'),"\n",sep='',end='')
+
+#sixth line
+print(getMealLine(0,'almoco','feijao'),"\t",sep='',end='')
+print(getMealLine(1,'almoco','feijao'),"\t",sep='',end='')
+print(getMealLine(2,'almoco','feijao'),"\t",sep='',end='')
+print(getMealLine(3,'almoco','feijao'),"\n",sep='',end='')
+
+#sixth line
+print(getMealLine(0,'almoco','guarnicao'),"\t",sep='',end='')
+print(getMealLine(1,'almoco','guarnicao'),"\t",sep='',end='')
+print(getMealLine(2,'almoco','guarnicao'),"\t",sep='',end='')
+print(getMealLine(3,'almoco','guarnicao'),"\n",sep='',end='')
+
+#seventh line
+print(getMealLine(0,'almoco','saladas'),"\t",sep='',end='')
+print(getMealLine(1,'almoco','saladas'),"\t",sep='',end='')
+print(getMealLine(2,'almoco','saladas'),"\t",sep='',end='')
+print(getMealLine(3,'almoco','saladas'),"\n",sep='',end='')
+
+#eighth line
+print(getMealLine(0,'almoco','sobremesa'),"\t",sep='',end='')
+print(getMealLine(1,'almoco','sobremesa'),"\t",sep='',end='')
+print(getMealLine(2,'almoco','sobremesa'),"\t",sep='',end='')
+print(getMealLine(3,'almoco','sobremesa'),"\n",sep='',end='')
 
 
