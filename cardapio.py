@@ -214,7 +214,7 @@ def getDataEDia(index):
 
 def getHeader(day):
     header = "~~ " + getDataEDia(day) + "~" * (TAB_SIZE - 3 - len(getDataEDia(day)))
-    return header, TAB_SIZE
+    return header
 
 def getFooter():
     return "~" * TAB_SIZE
