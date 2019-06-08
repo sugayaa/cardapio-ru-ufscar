@@ -213,13 +213,16 @@ def getDataEDia(index):
     return dataEDia
 
 def getHeader(day):
+    global TAB_SIZE
     header = "~~ " + getDataEDia(day) + "~" * (TAB_SIZE - 3 - len(getDataEDia(day)))
     return header
 
 def getFooter():
+    global TAB_SIZE
     return "~" * TAB_SIZE
 
 def getMealLine(index):
+    global TAB_SIZE
     global semana
     refeicao = getattr(semana[index], 'almoco')
     carne = getattr(refeicao, 'pratoPrincipalCarne')
@@ -237,6 +240,7 @@ def getMealLine(index):
 
 def getMealLine(index, meal, attr):
     global semana
+    global TAB_SIZE
     refeicao = getattr(semana[index], meal)
     food = getattr(refeicao, attr)
     mealLine = "* "
@@ -260,10 +264,12 @@ def getMealLine(index, meal, attr):
     return mealLine
 
 def getBlankLine():
+    global TAB_SIZE
     blankLine = "*" + " " * (TAB_SIZE - 2) + "*"
     return blankLine
 
 def getTitleLine(title):
+    global TAB_SIZE
     titleline = "* >>>"
     titleline += title.capitalize()
     titleline += " " * (TAB_SIZE - 12)
@@ -664,7 +670,7 @@ def main():
         print(" " * SND_TAB_SIZE, getFooter()," \t",sep='',end='')
         print(getFooter(),"\t",sep='',end='')
         print(getFooter(),"\n",sep='',end='')
-    elif r == "19SND_TAB_SIZEx1080":
+    elif r == "1920x1080":
 
         TAB_SIZE = 70
         SND_TAB_SIZE = 40
