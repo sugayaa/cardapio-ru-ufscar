@@ -18,6 +18,12 @@ else:
 python3 cardapio.py
 ```
 
+### Linux requirements
+```bash
+curl
+xrandr
+```
+
 ## Others
 If you've used the script before but now you're wanting the menu from today on, just remove ru.html:
 ```bash
