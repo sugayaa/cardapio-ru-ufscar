@@ -25,7 +25,7 @@ python3 cardapio.py
 
 
 ## Others
-If you've used the script before but now you're wanting the menu from today on, just remove ru.html:
+If you've used the script before but you're wanting the menu from today on, just remove ru.html:
 ```bash
 rm ru.html
 ```
