@@ -215,7 +215,7 @@ def getDataEDia(index):
 def getHeader(day):
     global TAB_SIZE
     header = "~~ " + getDataEDia(day) + "~" * (TAB_SIZE - 3 - len(getDataEDia(day)))
-    return header
+    return header, TAB_SIZE
 
 def getFooter():
     global TAB_SIZE
@@ -680,6 +680,7 @@ def main():
         print(getHeader(1), "\t", sep='',end='')
         print(getHeader(2), "\t", sep='',end='')
         print(getHeader(3), "\n", sep='',end='')
+        print("outside function tab size:",TAB_SIZE,"second tab size:",SND_TAB_SIZE)
 
         print(getTitleLine('almoço'),"\t",sep='',end='')
         print(getTitleLine('almoço'),"\t",sep='',end='')
