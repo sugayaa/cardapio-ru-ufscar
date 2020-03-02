@@ -193,6 +193,47 @@ class HTMLParser(HTMLParser):
 
 
 ###### FUNCTIONS ##################################################################################
+def buildLine(no_meals, line_no):
+    line = ""
+    if line_no > 9:
+        ref = "jantar"
+    else:
+        ref = "almoço"
+
+    for i in range(no_meals):
+        if line_no % 9 == 0:
+            idx = line_no // 9
+            if idx == 0:
+                line += getHeader(i)
+            elif idx == 1:
+                line += getBlankLine()
+            elif idx == 2:
+                line += getFooter()
+        if line_no % 9 == 1:
+            line += getTitleLine(ref)
+        if line_no % 9 == 2:
+            line += getMealLine(i, ref,'pratoPrincipalCarne')
+        if line_no % 9 == 3:
+            line += getMealLine(i, ref,'pratoPrincipalVegetariano')
+        if line_no % 9 == 4:
+            line += getMealLine(i, ref,'arroz')
+        if line_no % 9 == 5:
+            line += getMealLine(i, ref,'feijao')
+        if line_no % 9 == 6:
+            line += getMealLine(i, ref,'guarnicao')
+        if line_no % 9 == 7:
+            line += getMealLine(i, ref,'saladas')
+        if line_no % 9 == 8:
+            line += getMealLine(i, ref,'sobremesa')
+
+        if i == no_meals - 1:
+            line += "\n"
+            if line_no == 18:
+                line += "\n"
+        else:
+            line += " "
+    return line
+
 def getRes():
     x_output = subprocess.check_output(["xrandr"])
     res_ant = ""
@@ -272,6 +313,8 @@ def getMealLine(index):
 
 def getMealLine(index, meal, attr):
     global semana
+    if meal == "almoço":
+        meal = "almoco"
     refeicao = getattr(semana[index], meal)
     food = getattr(refeicao, attr)
     mealLine = "* "
@@ -297,6 +340,9 @@ def getMealLine(index, meal, attr):
 def getBlankLine():
     blankLine = "*" + " " * (TAB_SIZE - 2) + "*"
     return blankLine
+
+def newGetBlankLine():
+    return "*"+ ""
 
 def getTitleLine(title):
     titleline = "* >>>"
@@ -339,562 +385,20 @@ def main():
     r = getRes().decode("utf-8")
     h, w = getTerRes()
     no_meals_per_line = getDisp(h, w)
+    meals_left = 7
     print(f"Refeições por linha {no_meals_per_line}")
     print(f"Res: {h},{w}")
 
     print(getMenuHeader(w))
 
-    if r == "1600x900":
-        print("\t\t\t\t\t\t\t\t     CARDAPIO DA SEMANA")
-        print(getHeader(0), "\t", sep='',end='')
-        print(getHeader(1), "\t", sep='',end='')
-        print(getHeader(2), "\t", sep='',end='')
-        print(getHeader(3), "\n", sep='',end='')
+    while meals_left > 0:
+        if meals_left < no_meals_per_line:
+            no_meals_per_line = meals_left
 
-        print(getTitleLine('almoço'),"\t",sep='',end='')
-        print(getTitleLine('almoço'),"\t",sep='',end='')
-        print(getTitleLine('almoço'),"\t",sep='',end='')
-        print(getTitleLine('almoço'),"\n",sep='',end='')
+        for i in range(19):
+            print(buildLine(no_meals_per_line, i),end='')
 
-        print(getMealLine(0,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','pratoPrincipalCarne'),"\n",sep='',end='')
-
-        print(getMealLine(0,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','pratoPrincipalVegetariano'),"\n",sep='',end='')
-
-        print(getMealLine(0,'almoco','arroz'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','arroz'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','arroz'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','arroz'),"\n",sep='',end='')
-
-        print(getMealLine(0,'almoco','feijao'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','feijao'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','feijao'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','feijao'),"\n",sep='',end='')
-
-        print(getMealLine(0,'almoco','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','guarnicao'),"\n",sep='',end='')
-
-        print(getMealLine(0,'almoco','saladas'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','saladas'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','saladas'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','saladas'),"\n",sep='',end='')
-
-        print(getMealLine(0,'almoco','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','sobremesa'),"\n",sep='',end='')
-
-        print(getBlankLine(),"\t",sep='',end='')
-        print(getBlankLine(),"\t",sep='',end='')
-        print(getBlankLine(),"\t",sep='',end='')
-        print(getBlankLine(),"\n",sep='',end='')
-
-        print(getTitleLine('jantar'),"\t",sep='',end='')
-        print(getTitleLine('jantar'),"\t",sep='',end='')
-        print(getTitleLine('jantar'),"\t",sep='',end='')
-        print(getTitleLine('jantar'),"\n",sep='',end='')
-
-        print(getMealLine(0,'jantar','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','pratoPrincipalCarne'),"\n",sep='',end='')
-
-        print(getMealLine(0,'jantar','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','pratoPrincipalVegetariano'),"\n",sep='',end='')
-
-        print(getMealLine(0,'jantar','arroz'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','arroz'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','arroz'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','arroz'),"\n",sep='',end='')
-
-        print(getMealLine(0,'jantar','feijao'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','feijao'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','feijao'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','feijao'),"\n",sep='',end='')
-
-        print(getMealLine(0,'jantar','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','guarnicao'),"\n",sep='',end='')
-
-        print(getMealLine(0,'jantar','saladas'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','saladas'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','saladas'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','saladas'),"\n",sep='',end='')
-
-        print(getMealLine(0,'jantar','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','sobremesa'),"\n",sep='',end='')
-
-        print(getFooter(),"\t",sep='',end='')
-        print(getFooter(),"\t",sep='',end='')
-        print(getFooter(),"\t",sep='',end='')
-        print(getFooter(),"\n",sep='',end='')
-
-        print() #jump 1 line
-
-        print(" " * SND_TAB_SIZE, getHeader(4), " \t", sep='',end='')
-        print(getHeader(5), "\t", sep='',end='')
-        print(getHeader(6), "\n", sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getTitleLine('almoço')," \t",sep='',end='')
-        print(getTitleLine('almoço'),"\t",sep='',end='')
-        print(getTitleLine('almoço'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','pratoPrincipalCarne')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','pratoPrincipalCarne'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','pratoPrincipalVegetariano')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','pratoPrincipalVegetariano'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','arroz')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','arroz'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','arroz'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','feijao')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','feijao'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','feijao'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','guarnicao')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','guarnicao'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','saladas')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','saladas'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','saladas'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','sobremesa')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','sobremesa'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getBlankLine()," \t",sep='',end='')
-        print(getBlankLine(),"\t",sep='',end='')
-        print(getBlankLine(),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getTitleLine('jantar')," \t",sep='',end='')
-        print(getTitleLine('jantar'),"\t",sep='',end='')
-        print(getTitleLine('jantar'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','pratoPrincipalCarne')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','pratoPrincipalCarne'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','pratoPrincipalVegetariano')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','pratoPrincipalVegetariano'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','arroz')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','arroz'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','arroz'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','feijao')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','feijao'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','feijao'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','guarnicao')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','guarnicao'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','saladas')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','saladas'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','saladas'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','sobremesa')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','sobremesa'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getFooter()," \t",sep='',end='')
-        print(getFooter(),"\t",sep='',end='')
-        print(getFooter(),"\n",sep='',end='')
-
-    elif r == "1366x768":
-
-        TAB_SIZE = 30
-
-        #first line
-        print("\t\t\t\t\t\t\t\tCARDAPIO DA SEMANA")
-        print(getHeader(0), "\t", sep='',end='')
-        print(getHeader(1), "\t", sep='',end='')
-        print(getHeader(2), "\t", sep='',end='')
-        print(getHeader(3), "\n", sep='',end='')
-
-        #second line
-        print(getTitleLine('almoço'),"\t",sep='',end='')
-        print(getTitleLine('almoço'),"\t",sep='',end='')
-        print(getTitleLine('almoço'),"\t",sep='',end='')
-        print(getTitleLine('almoço'),"\n",sep='',end='')
-
-        #third line
-        print(getMealLine(0,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','pratoPrincipalCarne'),"\n",sep='',end='')
-
-        #fourth line
-        print(getMealLine(0,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','pratoPrincipalVegetariano'),"\n",sep='',end='')
-
-
-        #fifth line
-        print(getMealLine(0,'almoco','arroz'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','arroz'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','arroz'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','arroz'),"\n",sep='',end='')
-
-        #sixth line
-        print(getMealLine(0,'almoco','feijao'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','feijao'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','feijao'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','feijao'),"\n",sep='',end='')
-
-        #seventh line
-        print(getMealLine(0,'almoco','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','guarnicao'),"\n",sep='',end='')
-
-        #eighth line
-        print(getMealLine(0,'almoco','saladas'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','saladas'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','saladas'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','saladas'),"\n",sep='',end='')
-
-        #ninth line
-        print(getMealLine(0,'almoco','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(1,'almoco','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(2,'almoco','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(3,'almoco','sobremesa'),"\n",sep='',end='')
-
-        #tenth line
-        print(getBlankLine(),"\t",sep='',end='')
-        print(getBlankLine(),"\t",sep='',end='')
-        print(getBlankLine(),"\t",sep='',end='')
-        print(getBlankLine(),"\n",sep='',end='')
-
-        #eleventh line
-        print(getTitleLine('jantar'),"\t",sep='',end='')
-        print(getTitleLine('jantar'),"\t",sep='',end='')
-        print(getTitleLine('jantar'),"\t",sep='',end='')
-        print(getTitleLine('jantar'),"\n",sep='',end='')
-
-        #twelveth line
-        print(getMealLine(0,'jantar','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','pratoPrincipalCarne'),"\n",sep='',end='')
-
-        #thirteenth line
-        print(getMealLine(0,'jantar','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','pratoPrincipalVegetariano'),"\n",sep='',end='')
-
-
-        #fourteenth line
-        print(getMealLine(0,'jantar','arroz'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','arroz'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','arroz'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','arroz'),"\n",sep='',end='')
-
-        #fifteenth line
-        print(getMealLine(0,'jantar','feijao'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','feijao'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','feijao'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','feijao'),"\n",sep='',end='')
-
-        #sixteenth line
-        print(getMealLine(0,'jantar','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','guarnicao'),"\n",sep='',end='')
-
-        #seventeenth line
-        print(getMealLine(0,'jantar','saladas'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','saladas'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','saladas'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','saladas'),"\n",sep='',end='')
-
-        #eighteenth line
-        print(getMealLine(0,'jantar','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(1,'jantar','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(2,'jantar','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(3,'jantar','sobremesa'),"\n",sep='',end='')
-
-        #nineteenth line
-        print(getFooter(),"\t",sep='',end='')
-        print(getFooter(),"\t",sep='',end='')
-        print(getFooter(),"\t",sep='',end='')
-        print(getFooter(),"\n",sep='',end='')
-
-        print() #jump 1 line
-
-        print(" " * SND_TAB_SIZE, getHeader(4), " \t", sep='',end='')
-        print(getHeader(5), "\t", sep='',end='')
-        print(getHeader(6), "\n", sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getTitleLine('almoço')," \t",sep='',end='')
-        print(getTitleLine('almoço'),"\t",sep='',end='')
-        print(getTitleLine('almoço'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','pratoPrincipalCarne')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','pratoPrincipalCarne'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','pratoPrincipalVegetariano')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','pratoPrincipalVegetariano'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','arroz')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','arroz'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','arroz'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','feijao')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','feijao'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','feijao'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','guarnicao')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','guarnicao'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','saladas')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','saladas'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','saladas'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','sobremesa')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(6,'almoco','sobremesa'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getBlankLine()," \t",sep='',end='')
-        print(getBlankLine(),"\t",sep='',end='')
-        print(getBlankLine(),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getTitleLine('jantar')," \t",sep='',end='')
-        print(getTitleLine('jantar'),"\t",sep='',end='')
-        print(getTitleLine('jantar'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','pratoPrincipalCarne')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','pratoPrincipalCarne'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','pratoPrincipalCarne'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','pratoPrincipalVegetariano')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','pratoPrincipalVegetariano'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','arroz')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','arroz'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','arroz'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','feijao')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','feijao'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','feijao'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','guarnicao')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','guarnicao'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','guarnicao'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','saladas')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','saladas'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','saladas'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','sobremesa')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','sobremesa'),"\t",sep='',end='')
-        print(getMealLine(6,'jantar','sobremesa'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getFooter()," \t",sep='',end='')
-        print(getFooter(),"\t",sep='',end='')
-        print(getFooter(),"\n",sep='',end='')
-    elif r == "1920x1080":
-
-        TAB_SIZE = 38
-        SND_TAB_SIZE = 25
-
-        print("\t\t\t\t\t\t\t\t\t\t     CARDAPIO DA SEMANA")
-        print("\t",getHeader(0), "\t", sep='',end='')
-        print("\t",getHeader(1), "\t", sep='',end='')
-        print("\t",getHeader(2), "\t", sep='',end='')
-        print("\t",getHeader(3), "\n", sep='',end='')
-
-        print("\t",getTitleLine('almoço'),"\t",sep='',end='')
-        print("\t",getTitleLine('almoço'),"\t",sep='',end='')
-        print("\t",getTitleLine('almoço'),"\t",sep='',end='')
-        print("\t",getTitleLine('almoço'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'almoco','pratoPrincipalCarne'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'almoco','pratoPrincipalCarne'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'almoco','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'almoco','pratoPrincipalVegetariano'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'almoco','arroz'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'almoco','arroz'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'almoco','arroz'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'almoco','arroz'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'almoco','feijao'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'almoco','feijao'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'almoco','feijao'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'almoco','feijao'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'almoco','guarnicao'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'almoco','guarnicao'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'almoco','guarnicao'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'almoco','guarnicao'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'almoco','saladas'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'almoco','saladas'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'almoco','saladas'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'almoco','saladas'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'almoco','sobremesa'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'almoco','sobremesa'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'almoco','sobremesa'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'almoco','sobremesa'),"\n",sep='',end='')
-
-        print("\t",getBlankLine(),"\t",sep='',end='')
-        print("\t",getBlankLine(),"\t",sep='',end='')
-        print("\t",getBlankLine(),"\t",sep='',end='')
-        print("\t",getBlankLine(),"\n",sep='',end='')
-
-        print("\t",getTitleLine('jantar'),"\t",sep='',end='')
-        print("\t",getTitleLine('jantar'),"\t",sep='',end='')
-        print("\t",getTitleLine('jantar'),"\t",sep='',end='')
-        print("\t",getTitleLine('jantar'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'jantar','pratoPrincipalCarne'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'jantar','pratoPrincipalCarne'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'jantar','pratoPrincipalCarne'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'jantar','pratoPrincipalCarne'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'jantar','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'jantar','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'jantar','pratoPrincipalVegetariano'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'jantar','pratoPrincipalVegetariano'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'jantar','arroz'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'jantar','arroz'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'jantar','arroz'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'jantar','arroz'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'jantar','feijao'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'jantar','feijao'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'jantar','feijao'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'jantar','feijao'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'jantar','guarnicao'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'jantar','guarnicao'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'jantar','guarnicao'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'jantar','guarnicao'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'jantar','saladas'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'jantar','saladas'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'jantar','saladas'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'jantar','saladas'),"\n",sep='',end='')
-
-        print("\t",getMealLine(0,'jantar','sobremesa'),"\t",sep='',end='')
-        print("\t",getMealLine(1,'jantar','sobremesa'),"\t",sep='',end='')
-        print("\t",getMealLine(2,'jantar','sobremesa'),"\t",sep='',end='')
-        print("\t",getMealLine(3,'jantar','sobremesa'),"\n",sep='',end='')
-
-        print("\t",getFooter(),"\t",sep='',end='')
-        print("\t",getFooter(),"\t",sep='',end='')
-        print("\t",getFooter(),"\t",sep='',end='')
-        print("\t",getFooter(),"\n",sep='',end='')
-
-        print() #jump 1 line
-
-        print(" " * SND_TAB_SIZE, getHeader(4), " \t", sep='',end='')
-        print(getHeader(5), "  \t", sep='',end='')
-        print(getHeader(6), "\n", sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getTitleLine('almoço')," \t",sep='',end='')
-        print(getTitleLine('almoço'),"  \t",sep='',end='')
-        print(getTitleLine('almoço'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','pratoPrincipalCarne')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','pratoPrincipalCarne'),"  \t",sep='',end='')
-        print(getMealLine(6,'almoco','pratoPrincipalCarne'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','pratoPrincipalVegetariano')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','pratoPrincipalVegetariano'),"  \t",sep='',end='')
-        print(getMealLine(6,'almoco','pratoPrincipalVegetariano'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','arroz')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','arroz'),"  \t",sep='',end='')
-        print(getMealLine(6,'almoco','arroz'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','feijao')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','feijao'),"  \t",sep='',end='')
-        print(getMealLine(6,'almoco','feijao'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','guarnicao')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','guarnicao'),"  \t",sep='',end='')
-        print(getMealLine(6,'almoco','guarnicao'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','saladas')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','saladas'),"  \t",sep='',end='')
-        print(getMealLine(6,'almoco','saladas'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'almoco','sobremesa')," \t",sep='',end='')
-        print(getMealLine(5,'almoco','sobremesa'),"  \t",sep='',end='')
-        print(getMealLine(6,'almoco','sobremesa'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getBlankLine()," \t",sep='',end='')
-        print(getBlankLine(),"  \t",sep='',end='')
-        print(getBlankLine(),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getTitleLine('jantar')," \t",sep='',end='')
-        print(getTitleLine('jantar'),"  \t",sep='',end='')
-        print(getTitleLine('jantar'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','pratoPrincipalCarne')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','pratoPrincipalCarne'),"  \t",sep='',end='')
-        print(getMealLine(6,'jantar','pratoPrincipalCarne'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','pratoPrincipalVegetariano')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','pratoPrincipalVegetariano'),"  \t",sep='',end='')
-        print(getMealLine(6,'jantar','pratoPrincipalVegetariano'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','arroz')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','arroz'),"  \t",sep='',end='')
-        print(getMealLine(6,'jantar','arroz'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','feijao')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','feijao'),"  \t",sep='',end='')
-        print(getMealLine(6,'jantar','feijao'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','guarnicao')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','guarnicao'),"  \t",sep='',end='')
-        print(getMealLine(6,'jantar','guarnicao'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','saladas')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','saladas'),"  \t",sep='',end='')
-        print(getMealLine(6,'jantar','saladas'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getMealLine(4,'jantar','sobremesa')," \t",sep='',end='')
-        print(getMealLine(5,'jantar','sobremesa'),"  \t",sep='',end='')
-        print(getMealLine(6,'jantar','sobremesa'),"\n",sep='',end='')
-
-        print(" " * SND_TAB_SIZE, getFooter()," \t",sep='',end='')
-        print(getFooter(),"  \t",sep='',end='')
-        print(getFooter(),"\n",sep='',end='')
+        meals_left -= no_meals_per_line
 
 ###################################################################################################
 
