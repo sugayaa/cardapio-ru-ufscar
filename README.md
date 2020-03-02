@@ -5,6 +5,7 @@ Python script to show the menu from UFSCar's community restaurant from terminal.
 First time setup:
 ```bash
 pip install --user -r requirements.txt
+chmod u+x download.sh
 ```
 
 ### Linux requirements
