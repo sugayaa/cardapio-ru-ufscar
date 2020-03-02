@@ -2,6 +2,7 @@ import os
 from html.parser import HTMLParser
 from dateutil.parser import parse
 import subprocess
+import sys
 
 ###### GLOBAL VARIABLES ######################
 
@@ -251,7 +252,7 @@ def getDisp(h, w):
     if w < 38:
         print("Are you kidding me?")
         print("Enlarge your terminal")
-        system.exit(1)
+        sys.exit(1)
     else:
         meal_space = 38
         no_meals = 0
@@ -365,6 +366,7 @@ def printAlignment(leftover):
 def printDate(date):
     return '{}/{}/{}'.format(date.day, date.month, date.year)
 
+
 def main():
     #html downloader and updater
     os.system("./download.sh")
@@ -386,8 +388,6 @@ def main():
     h, w = getTerRes()
     no_meals_per_line = getDisp(h, w)
     meals_left = 7
-    print(f"Refeições por linha {no_meals_per_line}")
-    print(f"Res: {h},{w}")
 
     print(getMenuHeader(w))
 
