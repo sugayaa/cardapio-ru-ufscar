@@ -5,6 +5,7 @@ import subprocess
 
 ###### GLOBAL VARIABLES ######################
 
+_T_TABSIZE = 9
 TAB_SIZE = 35
 SND_TAB_SIZE = 20
 leiaCardapio = False
@@ -201,6 +202,27 @@ def getRes():
             return res_ant
         res_ant = it
 
+def getTerRes():
+    h, w = map(int, subprocess.check_output(["stty", "size"]).split())
+    return h, w
+
+def getDisp(h, w):
+    if w < 38:
+        print("Are you kidding me?")
+        print("Enlarge your terminal")
+        system.exit(1)
+    else:
+        meal_space = 38
+        no_meals = 0
+        while w >= meal_space:
+            w -= meal_space
+            no_meals += 1
+            if meal_space == 38:
+                meal_space += 1
+
+        return no_meals
+
+
 def getDataEDia(index):
     global semana
     dataEDia = ""
@@ -211,6 +233,19 @@ def getDataEDia(index):
     dataEDia += " "
 
     return dataEDia
+
+def getMenuHeader(w):
+    if w >= 18:
+        center = w // 2
+        center -= 9
+        no_tabs = 0
+        while center > 9:
+            center -= 9
+            no_tabs += 1
+
+        return printTabs(no_tabs) + printAlignment(center) + "CARDAPIO DA SEMANA"
+    else:
+        return ""
 
 def getHeader(day):
     header = "~~ " + getDataEDia(day) + "~" * (TAB_SIZE - 3 - len(getDataEDia(day)))
@@ -270,6 +305,17 @@ def getTitleLine(title):
     titleline += "*"
     return titleline
 
+def printTabs(no):
+    return '\t' * no
+
+def printAlignment(leftover):
+    spaces = 0
+    while leftover >= 2:
+        leftover -= 2
+        spaces += 1
+
+    return " " * spaces
+
 def printDate(date):
     return '{}/{}/{}'.format(date.day, date.month, date.year)
 
@@ -279,7 +325,6 @@ def main():
     global TAB_SIZE
     global SND_TAB_SIZE
 
-    #refeicaoAtual = refeicao()
 
     f = open("ru.html", "r")
     html = f.read()
@@ -292,6 +337,13 @@ def main():
 
 
     r = getRes().decode("utf-8")
+    h, w = getTerRes()
+    no_meals_per_line = getDisp(h, w)
+    print(f"Refeições por linha {no_meals_per_line}")
+    print(f"Res: {h},{w}")
+
+    print(getMenuHeader(w))
+
     if r == "1600x900":
         print("\t\t\t\t\t\t\t\t     CARDAPIO DA SEMANA")
         print(getHeader(0), "\t", sep='',end='')
@@ -843,7 +895,6 @@ def main():
         print(" " * SND_TAB_SIZE, getFooter()," \t",sep='',end='')
         print(getFooter(),"  \t",sep='',end='')
         print(getFooter(),"\n",sep='',end='')
-
 
 ###################################################################################################
 
