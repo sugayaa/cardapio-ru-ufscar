@@ -327,6 +327,10 @@ def getMealLine(index, meal, attr):
         mealLine += "Feijão "
     elif attr == "saladas":
         mealLine += "Salada "
+    elif attr == "guarnicao":
+        mealLine += "Guarnição "
+    elif attr == "sobremesa":
+        mealLine += "Sobremesa "
 
     if len(food) > TAB_SIZE - 4:
         food = food[0:TAB_SIZE - 5 - len(mealLine)] #3 from "..." + 2 from " *"
