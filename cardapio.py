@@ -9,6 +9,7 @@ import sys
 _T_TABSIZE = 9
 TAB_SIZE = 35
 SND_TAB_SIZE = 20
+CARDAPIO="/tmp/cardapio-ru/ru.html"
 leiaCardapio = False
 dias = -1
 conjDias = []
@@ -374,7 +375,7 @@ def main():
     global SND_TAB_SIZE
 
 
-    f = open("ru.html", "r")
+    f = open(CARDAPIO, "r")
     html = f.read()
     parser = HTMLParser()
     parser.feed(html)
