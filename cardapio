@@ -1,3 +1,5 @@
+#!/bin/env python
+
 import os
 from html.parser import HTMLParser
 from dateutil.parser import parse
